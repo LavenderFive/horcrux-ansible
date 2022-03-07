@@ -1,0 +1,1 @@
+{{ chain_id }} tcp://{{ mysentry }}:1234 -c -p tcp://{{ signer1st['host'] }}:2222|2223|{{ signer1st['order'] }},tcp://{{ signer2nd['host'] }}:2222|2223|{{ signer2nd['order'] }} -r {{ me }}:2223 -t 2 --timeout 1500ms

@@ -1,0 +1,15 @@
+[Unit]
+Description=MPC Signer node
+After=network.target
+
+[Service]
+Type=simple
+User={{ horcrux_user }}
+WorkingDirectory={{ horcrux_dir }}
+ExecStart={{ horcrux_dir }}/go/bin/horcrux cosigner start
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

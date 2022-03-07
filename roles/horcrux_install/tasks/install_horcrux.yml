@@ -1,0 +1,70 @@
+---
+- name: Create horcrux user
+  become: true
+  ansible.builtin.user:
+    name: '{{ horcrux_user }}'
+    password: '!'
+    home: '{{ horcrux_dir }}'
+    shell: /bin/false
+
+- name: Make sure the folder does not exist
+  become: yes
+  file:
+    owner: '{{ horcrux_user }}'
+    state: absent
+    path: '{{ horcrux_dir }}/horcrux'
+
+- name: Clone horcrux repo
+  become: yes
+  git:
+    repo: '{{ horcrux_repo }}'
+    dest: '{{ horcrux_dir }}/horcrux'
+
+- name: Install horcrux
+  become: yes
+  command: '{{ item }}'
+  args:
+    chdir: '{{ horcrux_dir }}/horcrux'
+  with_items:
+    - 'git fetch'
+    - 'git checkout {{ horcrux_version }}'
+    - 'make install'
+  environment:
+    PATH: '{{ path }}'
+    GOPATH: '{{ horcrux_dir }}/go'
+
+- name: Copy horcrux service file
+  become: true
+  template:
+    src: 'horcrux.service.j2'
+    dest: '/etc/systemd/system/horcrux.service'
+    owner: root
+    group: root
+    mode: 600
+
+- name: fix permissions for horcrux files
+  become: true
+  ansible.builtin.file:
+    path: '{{ horcrux_dir }}'
+    state: directory
+    recurse: yes
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+
+- name: fix permissions for horcrux dir
+  become: true
+  ansible.builtin.file:
+    path: '{{ horcrux_dir }}'
+    state: directory
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+    mode: 0700
+
+- name: stop horcrux service
+  become: true
+  systemd:
+    name: horcrux
+    state: stopped
+    daemon_reload: true
+    enabled: true
+  changed_when: false

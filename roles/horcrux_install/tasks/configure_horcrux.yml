@@ -1,0 +1,6 @@
+#horcrux config init tgrade-testnet-3 "tcp://10.0.1.11:1234" -c -p "tcp://10.0.1.51:2222|2,tcp://10.0.1.52:2222|3" -t 2 --timeout 1500ms
+---
+- name: initialize horcrux config
+  debug:
+    msg: "{{ horcrux_dir }}/go/bin/horcrux config init {{ lookup('template', 'signer_order.j2') }}"
+
