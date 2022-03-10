@@ -26,6 +26,7 @@ horcrux_cluster:
       ansible_host: signer1
       mysentry: 10.168.0.1
       me: 10.168.1.1
+      signorder: 1
       signer1st:
               order: 2
               host: 10.168.1.2
@@ -36,6 +37,7 @@ horcrux_cluster:
       ansible_host: signer2
       mysentry: 10.168.0.1
       me: 10.168.1.2
+      signorder: 2
       signer1st:
               order: 1
               host: 10.168.1.1
@@ -45,6 +47,7 @@ horcrux_cluster:
     signer3:
       ansible_host: signer3
       mysentry: 10.168.0.3
+      signorder: 3
       me: 10.168.1.3
       signer1st:
               order: 1

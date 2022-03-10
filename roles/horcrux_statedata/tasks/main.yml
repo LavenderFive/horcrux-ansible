@@ -1,0 +1,13 @@
+#horcrux config init tgrade-testnet-3 "tcp://10.0.1.11:1234" -c -p "tcp://10.0.1.51:2222|2,tcp://10.0.1.52:2222|3" -t 2 --timeout 1500ms
+---
+- name: Configure priv_validator_state
+  debug:
+          msg: 
+                - "~/.horcrux/state/{{ chain_id }}_priv_validator_state.json:"
+                - "{{ lookup('template', 'validatorState.j2') }}"
+
+- name: Configure share_sign_state
+  debug:
+          msg: 
+                - "~/.horcrux/state/{{ chain_id }}_share_sign_state.json:"
+                - "{{ lookup('template', 'validatorState.j2') }}"

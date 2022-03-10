@@ -1,0 +1,6 @@
+---
+- name: Prepare validator privatekey for horcrux
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - horcrux_genkeys
