@@ -5,9 +5,31 @@
     name: '{{ horcrux_user }}'
     password: '!'
     home: '{{ horcrux_dir }}'
-    shell: /bin/false
+    shell: /bin/bash
 
-- name: Make sure the folder does not exist
+- name: install apt packages
+  become: true
+  apt:
+    name: '{{item}}'
+    state: present
+    update_cache: yes
+  loop:
+    - make
+    - build-essential
+    - gcc
+    - git
+    - jq
+    - chrony
+
+- name: Install Go
+  become: true
+  ansible.builtin.unarchive:
+    src: 'https://golang.org/dl/go{{ go_version }}.linux-amd64.tar.gz'
+    dest: /usr/local
+    remote_src: yes
+    mode: 0755
+
+- name: Create horcrux directory
   become: yes
   file:
     owner: '{{ horcrux_user }}'
@@ -41,6 +63,15 @@
     owner: root
     group: root
     mode: 600
+
+- name: copy .profile
+  become: true
+  template:
+    src: 'profile.j2'
+    dest: '{{ horcrux_dir }}/.profile'
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+    mode: '0600'
 
 - name: fix permissions for horcrux files
   become: true

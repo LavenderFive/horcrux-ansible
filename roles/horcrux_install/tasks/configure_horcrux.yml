@@ -1,6 +1,30 @@
-#horcrux config init tgrade-testnet-3 "tcp://10.0.1.11:1234" -c -p "tcp://10.0.1.51:2222|2,tcp://10.0.1.52:2222|3" -t 2 --timeout 1500ms
 ---
-- name: initialize horcrux config
+- name: initialize horcrux config (DBG - about to run these commands)
   debug:
     msg: "{{ horcrux_dir }}/go/bin/horcrux config init {{ lookup('template', 'signer_order.j2') }}"
 
+- name: copy horcrux init script
+  become: true
+  template:
+    src: 'signer_order.j2'
+    dest: '{{ horcrux_dir }}/init_horcrux.sh'
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+    mode: '0700'
+
+- name: initializing horcrux config actual
+  ansible.builtin.command: sudo su - "{{ horcrux_user }}" -c "{{ horcrux_dir}}/init_horcrux.sh"
+  become: true
+
+- name: Generate private keys
+  local_action: ansible.builtin.command make genkeys
+  run_once: True
+
+- name: Copy keys
+  become: true
+  ansible.builtin.copy:
+    src: "keys/private_share_{{ signorder }}.json"
+    dest: "{{ horcrux_dir }}/.horcrux/share.json"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    mode: '0400'

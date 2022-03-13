@@ -24,22 +24,46 @@ ${KEYS_DIR}:
 
 directories: ${OUT_DIR} ${KEYS_DIR}
 
+#
+# Grab the latest horcrux binary defined by ansible's group_vars/all.yml
 hostbinaries: directories
 ifeq (,$(wildcard ${OUT_DIR}/horcrux))
 	wget -O ${OUT_DIR}/horcrux.tgz ${HORCRUX_URL}
 	tar -xf ${OUT_DIR}/horcrux.tgz -C ${OUT_DIR}
 endif
 
-clean: 
-	@rm -rf ${OUT_DIR}
-	@echo ${OUT_DIR} is gone, but ${KEYS_DIR} is still there
 
+#
+# generate an empty config
+#
 emptyconfig: hostbinaries
 ifeq (,$(wildcard ${KEYS_DIR}/config.yaml))
 	touch ${KEYS_DIR}/config.yaml
 endif
 
-genkeys: emptyconfig
-	${HORCRUX_HOST} create-shares --home ${KEYS_DIR}  ${KEYS_DIR}/priv_validator_key.json 2 3
+deps: hostbinaries
+ifeq (,$(wildcard ${KEYS_DIR}/priv_validator_key.json))
+	@echo "Missing priv_validator_key.json. Place it here: ${KEYS_DIR}/priv_validator_key.json"
+	@false
+else
+	@echo "Priv validator key found ${KEYS_DIR}/priv_validator_key.json"
+endif
+
+#
+# Generate keys from validator private key
+#
+genkeys: deps emptyconfig
+	cd ${KEYS_DIR} && ../${HORCRUX_HOST} create-shares --home . priv_validator_key.json 2 3
+
+test:
+	@echo running ansible test..
+
+usage:
+	@echo Usage: make deps to check deps
+
+clean:
+	@rm -rf ${OUT_DIR}
+	@echo ${OUT_DIR} is gone, but ${KEYS_DIR} is still there
+
 
 all: genkeys
