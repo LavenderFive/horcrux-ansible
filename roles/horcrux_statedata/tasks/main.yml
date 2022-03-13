@@ -1,13 +1,26 @@
-#horcrux config init tgrade-testnet-3 "tcp://10.0.1.11:1234" -c -p "tcp://10.0.1.51:2222|2,tcp://10.0.1.52:2222|3" -t 2 --timeout 1500ms
 ---
-- name: Configure priv_validator_state
-  debug:
-          msg: 
-                - "~/.horcrux/state/{{ chain_id }}_priv_validator_state.json:"
-                - "{{ lookup('template', 'validatorState.j2') }}"
+- name: copy priv_validator_state
+  become: true
+  template:
+    src: 'validatorState.j2'
+    dest: '{{ horcrux_dir }}/.horcrux/state/{{ chain_id }}_priv_validator_state.json'
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+    mode: '0600'
 
-- name: Configure share_sign_state
-  debug:
-          msg: 
-                - "~/.horcrux/state/{{ chain_id }}_share_sign_state.json:"
-                - "{{ lookup('template', 'validatorState.j2') }}"
+- name: copy share_sign_state
+  become: true
+  template:
+    src: 'validatorState.j2'
+    dest: '{{ horcrux_dir }}/.horcrux/state/{{ chain_id }}_share_sign_state.json'
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+    mode: '0600'
+
+- name: restart horcrux service
+  become: true
+  systemd:
+    name: horcrux
+    state: restarted
+    daemon_reload: true
+    enabled: true  
