@@ -123,7 +123,7 @@ $cp priv_validator_key.json keys/
 This step will create the horcrux user, install the latest version of horcrux, and setup an an initial config based on your inventory file.
 
 ```
-ansible-playbook -i inventorysample.yml horcrux.yml  -e "target=horcrux_cluster"
+ansible-playbook -i inventory.yml horcrux.yml  -e "target=horcrux_cluster"
 ```
 
 If all goes well you should have your horcrux cluster all setup but not running yet. 
@@ -150,7 +150,7 @@ Next we will will update the following files on each signer node and restart the
 
 Example run:
 ```
-ansible-playbook -i inventory_vagrant.yml horcrux_state.yml  -e "target=horcrux_cluster block_height=361402 block_round=0 block_step=3 "
+ansible-playbook -i inventory.yml horcrux_state.yml  -e "target=horcrux_cluster block_height=361402 block_round=0 block_step=3 "
 ```
 
 ### Restart your full nodes
@@ -167,5 +167,5 @@ This ansible script creates a horcrux user (with limited capabilities).  It also
 
 # Thanks!
 
-Thanks for reading. If you found this helpful, please consider supporting our [validator](https://www.mintscan.io/chihuahua/validators/chihuahuavaloper1y53zdszvt87fjg9hn50kg78850el26k0l9wxwl).
+If you like this content, please consider supporting our [validator](https://www.mintscan.io/chihuahua/validators/chihuahuavaloper1y53zdszvt87fjg9hn50kg78850el26k0l9wxwl). You can stake with us at https://restake.app/chihuahua and https://restake.app/chihuahua.
 
