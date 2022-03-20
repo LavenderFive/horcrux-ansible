@@ -52,9 +52,9 @@ $vagrant up
 ```
 Make sure you can ssh into each vm without a password with the following: (NOTE: there is probably an easier way to do this step)
 ```
-$ssh -i  ~.vagrant.d/insecure_private_key vagrant@10.168.1.12
-$ssh -i  ~.vagrant.d/insecure_private_key vagrant@10.168.1.11
-$ssh -i  ~.vagrant.d/insecure_private_key vagrant@10.168.1.10
+$ssh -i  ~/.vagrant.d/insecure_private_key vagrant@10.168.1.12
+$ssh -i  ~/.vagrant.d/insecure_private_key vagrant@10.168.1.11
+$ssh -i  ~/.vagrant.d/insecure_private_key vagrant@10.168.1.10
 ```
 
 ## Install 
@@ -167,5 +167,5 @@ This ansible script creates a horcrux user (with limited capabilities).  It also
 
 # Thanks!
 
-If you like this content, please consider supporting our [validator](https://www.mintscan.io/chihuahua/validators/chihuahuavaloper1y53zdszvt87fjg9hn50kg78850el26k0l9wxwl). You can stake with us at https://restake.app/chihuahua and https://restake.app/chihuahua.
+If you would like content like, please consider supporting our [validator](https://www.mintscan.io/chihuahua/validators/chihuahuavaloper1y53zdszvt87fjg9hn50kg78850el26k0l9wxwl). You can stake with us at https://restake.app/chihuahua and https://restake.app/chihuahua.
 
