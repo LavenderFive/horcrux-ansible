@@ -1,0 +1,7 @@
+---
+- name: Create horcrux user
+  user:
+    name: '{{ horcrux_user }}'
+    password: '!'
+    home: '{{ horcrux_home }}'
+    shell: /bin/bash

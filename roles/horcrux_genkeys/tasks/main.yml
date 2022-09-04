@@ -6,7 +6,7 @@
   loop: "{{ hostvars | dict2items }}"
   delegate_to: localhost
 
-- name: generate 
+- name: Generate 
   debug:
     msg:
        - "Host:  {{ item.key }} : copying private_share_{{ item.value['signorder'] }}.json and copying it to host {{ item.key }} in ~/.horcrux/share.json"

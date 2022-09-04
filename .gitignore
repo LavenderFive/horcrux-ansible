@@ -1,1 +1,2 @@
 inventory.yml
+group_vars/mainnets/*

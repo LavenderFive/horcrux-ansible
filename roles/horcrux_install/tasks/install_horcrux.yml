@@ -1,17 +1,4 @@
 ---
-- name: Create horcrux user
-  user:
-    name: '{{ horcrux_user }}'
-    password: '!'
-    home: '{{ horcrux_dir }}'
-    shell: /bin/bash
-
-- name: Create horcrux directory
-  file:
-    owner: '{{ horcrux_user }}'
-    state: absent
-    path: '{{ horcrux_dir }}/horcrux'
-
 - name: Clone horcrux repo
   git:
     repo: '{{ horcrux_repo }}'
@@ -29,14 +16,6 @@
     PATH: '{{ path }}'
     GOPATH: '{{ horcrux_dir }}/go'
 
-- name: Copy horcrux service file
-  template:
-    src: 'horcrux.service.j2'
-    dest: '/etc/systemd/system/horcrux.service'
-    owner: root
-    group: root
-    mode: 600
-
 - name: Copy .profile
   template:
     src: 'profile.j2'
@@ -44,27 +23,3 @@
     owner: '{{ horcrux_user }}'
     group: '{{ horcrux_user }}'
     mode: '0600'
-
-- name: Fix permissions for horcrux files
-  file:
-    path: '{{ horcrux_dir }}'
-    state: directory
-    recurse: yes
-    owner: '{{ horcrux_user }}'
-    group: '{{ horcrux_user }}'
-
-- name: Fix permissions for horcrux dir
-  file:
-    path: '{{ horcrux_dir }}'
-    state: directory
-    owner: '{{ horcrux_user }}'
-    group: '{{ horcrux_user }}'
-    mode: 0700
-
-- name: Stop horcrux service
-  systemd:
-    name: horcrux
-    state: stopped
-    daemon_reload: true
-    enabled: true
-  changed_when: false

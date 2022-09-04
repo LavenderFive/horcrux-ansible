@@ -1,18 +1,33 @@
 ---
+- name: Create horcrux directory
+  file:
+    owner: '{{ horcrux_user }}'
+    state: directory
+    path: '{{ horcrux_dir }}'
+
+- name: Copy horcrux service file
+  become: true
+  template:
+    src: 'horcrux.service.j2'
+    dest: '/etc/systemd/system/{{ service_file }}'
+    owner: root
+    group: root
+    mode: 600
+
 - name: Initialize horcrux config (DBG - about to run these commands)
   debug:
-    msg: "{{ horcrux_dir }}/go/bin/horcrux config init {{ lookup('template', 'signer_order.j2') }}"
+    msg: "{{ horcrux_home }}/go/bin/horcrux config init {{ lookup('template', 'signer_order.j2') }}"
 
 - name: Copy horcrux init script
   template:
     src: 'signer_order.j2'
-    dest: '{{ horcrux_dir }}/init_horcrux.sh'
+    dest: '{{ horcrux_home }}/init_horcrux.sh'
     owner: '{{ horcrux_user }}'
     group: '{{ horcrux_user }}'
     mode: '0700'
 
 - name: Initializing horcrux config actual
-  command: sudo su - "{{ horcrux_user }}" -c "{{ horcrux_dir}}/init_horcrux.sh"
+  command: {{ horcrux_home }}/init_horcrux.sh"
 
 - name: Generate private keys
   local_action: command make genkeys
