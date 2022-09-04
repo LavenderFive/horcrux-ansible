@@ -1,7 +1,0 @@
----
-- name: Create horcrux user
-  ansible.builtin.user:
-    name: horcrux
-    password: '!'
-    shell: /bin/false
-    append: yes

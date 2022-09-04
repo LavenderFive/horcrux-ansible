@@ -1,5 +1,5 @@
 ---
-- name: install horcrux
+- name: Install horcrux
   import_tasks: install_horcrux.yml
 
 - name: Configure horcrux

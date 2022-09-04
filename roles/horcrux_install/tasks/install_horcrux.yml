@@ -1,49 +1,23 @@
 ---
 - name: Create horcrux user
-  become: true
-  ansible.builtin.user:
+  user:
     name: '{{ horcrux_user }}'
     password: '!'
     home: '{{ horcrux_dir }}'
     shell: /bin/bash
 
-- name: install apt packages
-  become: true
-  apt:
-    name: '{{item}}'
-    state: present
-    update_cache: yes
-  loop:
-    - make
-    - build-essential
-    - gcc
-    - git
-    - jq
-    - chrony
-
-- name: Install Go
-  become: true
-  ansible.builtin.unarchive:
-    src: 'https://golang.org/dl/go{{ go_version }}.linux-amd64.tar.gz'
-    dest: /usr/local
-    remote_src: yes
-    mode: 0755
-
 - name: Create horcrux directory
-  become: yes
   file:
     owner: '{{ horcrux_user }}'
     state: absent
     path: '{{ horcrux_dir }}/horcrux'
 
 - name: Clone horcrux repo
-  become: yes
   git:
     repo: '{{ horcrux_repo }}'
     dest: '{{ horcrux_dir }}/horcrux'
 
 - name: Install horcrux
-  become: yes
   command: '{{ item }}'
   args:
     chdir: '{{ horcrux_dir }}/horcrux'
@@ -56,7 +30,6 @@
     GOPATH: '{{ horcrux_dir }}/go'
 
 - name: Copy horcrux service file
-  become: true
   template:
     src: 'horcrux.service.j2'
     dest: '/etc/systemd/system/horcrux.service'
@@ -64,8 +37,7 @@
     group: root
     mode: 600
 
-- name: copy .profile
-  become: true
+- name: Copy .profile
   template:
     src: 'profile.j2'
     dest: '{{ horcrux_dir }}/.profile'
@@ -73,26 +45,23 @@
     group: '{{ horcrux_user }}'
     mode: '0600'
 
-- name: fix permissions for horcrux files
-  become: true
-  ansible.builtin.file:
+- name: Fix permissions for horcrux files
+  file:
     path: '{{ horcrux_dir }}'
     state: directory
     recurse: yes
     owner: '{{ horcrux_user }}'
     group: '{{ horcrux_user }}'
 
-- name: fix permissions for horcrux dir
-  become: true
-  ansible.builtin.file:
+- name: Fix permissions for horcrux dir
+  file:
     path: '{{ horcrux_dir }}'
     state: directory
     owner: '{{ horcrux_user }}'
     group: '{{ horcrux_user }}'
     mode: 0700
 
-- name: stop horcrux service
-  become: true
+- name: Stop horcrux service
   systemd:
     name: horcrux
     state: stopped

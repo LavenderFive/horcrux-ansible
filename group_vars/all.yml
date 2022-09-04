@@ -1,6 +1,6 @@
 # go
-go_version: '1.17.1'
+go_version: '1.18.5'
 
 # horcrux
 horcrux_repo: 'https://github.com/strangelove-ventures/horcrux'
-horcrux_version: 'v2.0.0-rc1'
+horcrux_version: 'v2.0.0'

@@ -1,10 +1,9 @@
 ---
-- name: initialize horcrux config (DBG - about to run these commands)
+- name: Initialize horcrux config (DBG - about to run these commands)
   debug:
     msg: "{{ horcrux_dir }}/go/bin/horcrux config init {{ lookup('template', 'signer_order.j2') }}"
 
-- name: copy horcrux init script
-  become: true
+- name: Copy horcrux init script
   template:
     src: 'signer_order.j2'
     dest: '{{ horcrux_dir }}/init_horcrux.sh'
@@ -12,17 +11,15 @@
     group: '{{ horcrux_user }}'
     mode: '0700'
 
-- name: initializing horcrux config actual
-  ansible.builtin.command: sudo su - "{{ horcrux_user }}" -c "{{ horcrux_dir}}/init_horcrux.sh"
-  become: true
+- name: Initializing horcrux config actual
+  command: sudo su - "{{ horcrux_user }}" -c "{{ horcrux_dir}}/init_horcrux.sh"
 
 - name: Generate private keys
-  local_action: ansible.builtin.command make genkeys
+  local_action: command make genkeys
   run_once: True
 
 - name: Copy keys
-  become: true
-  ansible.builtin.copy:
+  copy:
     src: "keys/private_share_{{ signorder }}.json"
     dest: "{{ horcrux_dir }}/.horcrux/share.json"
     owner: "{{ horcrux_user }}"
