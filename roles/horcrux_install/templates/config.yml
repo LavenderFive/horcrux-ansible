@@ -1,0 +1,19 @@
+home-dir: {{ horcrux_dir }}
+chain-id: {{ chain_id }}
+cosigner:
+  threshold: {{ threshold }}
+  shares: {{ shares }}
+  p2p-listen: tcp://{{ ansible_wg0.ipv4.address }}:2{{ signer_port }}
+  peers:
+{% for peer in horcrux_peers %}
+{% if peer.share_id != my_share %}
+  - share-id: {{ peer.share_id }}
+    p2p-addr: {{ peer.p2p_addr }}
+{% endif %}
+{% endfor %}
+  rpc-timeout: {{ rpc_timeout }}
+chain-nodes:
+{% for sentry in sentries %}
+- priv-val-addr: tcp://{{ sentry }}
+{% endfor %}
+
