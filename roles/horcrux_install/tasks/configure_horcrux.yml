@@ -2,8 +2,22 @@
 - name: Create horcrux directory
   file:
     owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
     state: directory
     path: '{{ horcrux_dir }}'
+    mode: '0750'
+
+- name: Create state files
+  template:
+    src: priv_validator_state.json
+    dest: "{{ horcrux_dir }}/state/{{ chain_id }}_{{ item }}"
+    mode: '0600'
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    force: no
+  with_items:
+    - priv_validator_state.json
+    - share_sign_state.json
 
 - name: Copy horcrux service file
   become: true
@@ -14,21 +28,6 @@
     group: root
     mode: 600
 
-- name: Initialize horcrux config (DBG - about to run these commands)
-  debug:
-    msg: "{{ horcrux_home }}/go/bin/horcrux config init {{ lookup('template', 'signer_order.j2') }}"
-
-- name: Copy horcrux init script
-  template:
-    src: 'signer_order.j2'
-    dest: '{{ horcrux_home }}/init_horcrux.sh'
-    owner: '{{ horcrux_user }}'
-    group: '{{ horcrux_user }}'
-    mode: '0700'
-
-- name: Initializing horcrux config actual
-  command: {{ horcrux_home }}/init_horcrux.sh"
-
 - name: Generate private keys
   local_action: command make genkeys
   run_once: True
@@ -36,7 +35,7 @@
 - name: Copy keys
   copy:
     src: "keys/private_share_{{ signorder }}.json"
-    dest: "{{ horcrux_dir }}/.horcrux/share.json"
+    dest: "{{ horcrux_dir }}/share.json"
     owner: "{{ horcrux_user }}"
     group: "{{ horcrux_user }}"
     mode: '0400'

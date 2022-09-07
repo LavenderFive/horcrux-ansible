@@ -3,14 +3,14 @@
   git:
     repo: '{{ horcrux_repo }}'
     dest: '{{ horcrux_dir }}/horcrux'
+    version: "{{ horcrux_version }}"
+    update: yes
 
 - name: Install horcrux
   command: '{{ item }}'
   args:
     chdir: '{{ horcrux_dir }}/horcrux'
   with_items:
-    - 'git fetch'
-    - 'git checkout {{ horcrux_version }}'
     - 'make install'
   environment:
     PATH: '{{ path }}'

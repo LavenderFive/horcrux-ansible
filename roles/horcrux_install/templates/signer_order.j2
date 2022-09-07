@@ -1,1 +1,0 @@
-{{ horcrux_dir }}/go/bin/horcrux config init {{ chain_id }} "tcp://{{ mysentry }}:1234" -c -p "tcp://{{ signer1st['host'] }}:2222|{{ signer1st['order'] }},tcp://{{ signer2nd['host'] }}:2222|{{ signer2nd['order'] }}" -l "tcp://{{ me }}:2222" -t 2 --timeout 1000ms
