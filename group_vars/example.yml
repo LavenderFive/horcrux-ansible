@@ -1,0 +1,11 @@
+---
+network: 
+chain_id: ''
+sentries: 
+  - '1.0.2.1:17659'
+  - '1.2.3.4:12859'
+
+signer_port: 053
+rpc_timeout: "750ms"
+threshold: 2
+shares: 3

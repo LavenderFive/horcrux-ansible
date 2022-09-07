@@ -1,7 +1,9 @@
 ---
 - name: Install node
-  hosts: '{{ target }}'
+  hosts: all
   become: true
   gather_facts: false
+  vars_files:
+    - '{{ var_file }}'
   roles:
     - horcrux_install

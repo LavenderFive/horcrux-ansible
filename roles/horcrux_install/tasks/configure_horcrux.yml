@@ -4,7 +4,7 @@
     owner: '{{ horcrux_user }}'
     group: '{{ horcrux_user }}'
     state: directory
-    path: '{{ horcrux_dir }}'
+    path: '{{ horcrux_dir }}/state'
     mode: '0750'
 
 - name: Create state files
@@ -19,6 +19,37 @@
     - priv_validator_state.json
     - share_sign_state.json
 
+- name: Generate private keys
+  become: false
+  local_action: command make genkeys
+  run_once: True
+
+- name: Find local key share
+  delegate_to: localhost
+  become: no
+  stat:
+    path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
+  register: has_share
+
+- name: Copy keys
+  copy:
+    src: "keys/private_share_{{ my_share }}.json"
+    dest: "{{ horcrux_dir }}/share.json"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    mode: '0400'
+  when: has_share.stat.isreg is defined and has_share.stat.isreg
+
+- name: Copy config
+  template:
+    backup: yes
+    src: config.yml
+    dest: "{{ horcrux_dir }}/config.yml"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    mode: '0644'
+  tags: configs
+
 - name: Copy horcrux service file
   become: true
   template:
@@ -27,15 +58,11 @@
     owner: root
     group: root
     mode: 600
+  register: systemdunit
 
-- name: Generate private keys
-  local_action: command make genkeys
-  run_once: True
-
-- name: Copy keys
-  copy:
-    src: "keys/private_share_{{ signorder }}.json"
-    dest: "{{ horcrux_dir }}/share.json"
-    owner: "{{ horcrux_user }}"
-    group: "{{ horcrux_user }}"
-    mode: '0400'
+- name: Enable systemd unit
+  systemd:
+    daemon_reload: yes
+    name: "{{ service_file }}"
+    enabled: yes
+  when: systemdunit.changed
