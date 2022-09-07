@@ -3,12 +3,12 @@ chain-id: {{ chain_id }}
 cosigner:
   threshold: {{ threshold }}
   shares: {{ shares }}
-  p2p-listen: tcp://{{ ansible_wg0.ipv4.address }}:2{{ signer_port }}
+  p2p-listen: tcp://{{ ansible_host }}:2{{ signer_port }}
   peers:
 {% for peer in horcrux_peers %}
 {% if peer.share_id != my_share %}
   - share-id: {{ peer.share_id }}
-    p2p-addr: {{ peer.p2p_addr }}
+    p2p-addr: tcp://{{ peer.p2p_addr }}:2{{ signer_port }}
 {% endif %}
 {% endfor %}
   rpc-timeout: {{ rpc_timeout }}

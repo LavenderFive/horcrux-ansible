@@ -1,2 +1,5 @@
 inventory.yml
 group_vars/mainnets/*
+group_vars/testnets/*
+keys/*
+hostbin/*

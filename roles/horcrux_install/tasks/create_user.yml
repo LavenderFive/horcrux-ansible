@@ -2,6 +2,17 @@
 - name: Create horcrux user
   user:
     name: '{{ horcrux_user }}'
-    password: '!'
     home: '{{ horcrux_home }}'
+    password: '{{ horcrux_password }}'
     shell: /bin/bash
+    password_lock: true
+
+- name: Set authorized keys
+  authorized_key:
+    user: "{{ horcrux_user }}"
+    key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+
+- name: Allow sudo for administrator
+  copy:
+    content: '{{ horcrux_user }} ALL=(ALL:ALL) NOPASSWD: ALL'
+    dest: '/etc/sudoers.d/{{ horcrux_user }}'

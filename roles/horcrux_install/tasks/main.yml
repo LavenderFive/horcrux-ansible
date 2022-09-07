@@ -3,9 +3,7 @@
   import_tasks: create_user.yml
 
 - name: Install horcrux
-  become_user: {{ horcrux_user }}
   import_tasks: install_horcrux.yml
 
 - name: Configure horcrux
-  become_user: {{ horcrux_user }}
   import_tasks: configure_horcrux.yml
