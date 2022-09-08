@@ -22,8 +22,8 @@
 - name: Copy config
   template:
     backup: yes
-    src: config.yml
-    dest: "{{ horcrux_dir }}/config.yml"
+    src: config.yaml
+    dest: "{{ horcrux_dir }}/config.yaml"
     owner: "{{ horcrux_user }}"
     group: "{{ horcrux_user }}"
     mode: '0644'
