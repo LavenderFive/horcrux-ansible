@@ -1,6 +1,0 @@
----
-- name: Configure horcrux state files
-  hosts: '{{ target }}'
-  gather_facts: false
-  roles:
-    - horcrux_statedata

@@ -1,6 +1,24 @@
+---
 # go
 go_version: '1.18.5'
 
 # horcrux
 horcrux_repo: 'https://github.com/strangelove-ventures/horcrux'
 horcrux_version: 'v2.0.0'
+
+rpc_timeout: "1000ms"
+threshold: 2
+shares: 3
+ansible_ssh_private_key_file: "~/.ssh/id_ed25519"
+path: "/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin:{{ horcrux_home }}/go/bin"
+horcrux_home: "/home/{{ horcrux_user }}"
+horcrux_dir: "{{ horcrux_home }}/.horcrux/{{ network }}"
+service_file: "horcrux_{{ network }}.service"
+
+horcrux_peers:
+  - share_id: 1
+    p2p_addr: "{{ signer1 }}"
+  - share_id: 2
+    p2p_addr: "{{ signer2 }}"
+  - share_id: 3
+    p2p_addr: "{{ signer3 }}"

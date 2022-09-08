@@ -1,4 +1,4 @@
-inventory.yml
+inventory.*
 group_vars/mainnets/*
 group_vars/testnets/*
 keys/*

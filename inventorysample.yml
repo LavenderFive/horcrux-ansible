@@ -1,55 +1,22 @@
-## Example Setup
-#sentry-1: 10.168.0.10
-#sentry-2: 10.168.0.11
-#sentry-3: 10.168.0.12
-#
-#signer-1: 10.168.1.10
-#signer-2: 10.168.1.11
-#signer-3: 10.168.1.12
-#
-
+---
 all:
-  vars:
-    ansible_user: ansible
-    ansible_port: 22
-    ansible_ssh_private_key_file: "~/.ssh/id_rsa"
-    path: "/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin:{{ horcrux_dir }}/go/bin"    
-    chain_id: 'chihuahua-1'
-    horcrux_user: 'horcrux'
-    horcrux_dir: "/home/{{ horcrux_user }}"
-  
-horcrux_cluster:
   hosts:
     signer1:
-      ansible_host: 10.168.1.10
-      mysentry: 10.168.0.10
-      me: 10.168.1.10
-      signorder: 1
-      signer1st:
-              order: 2
-              host: 10.168.1.11
-      signer2nd:
-              order: 3
-              host: 10.168.1.12
+      my_share: 1
+      ansible_host: "{{ signer1 }}"
     signer2:
-      ansible_host: 10.168.1.11
-      mysentry: 10.168.0.11
-      me: 10.168.1.11
-      signorder: 2
-      signer1st:
-              order: 1
-              host: 10.168.1.10
-      signer2nd:
-              order: 3
-              host: 10.168.1.12
+      my_share: 2
+      ansible_host: "{{ signer2 }}"
     signer3:
-      ansible_host: 10.168.1.12
-      mysentry: 10.168.0.12
-      signorder: 3
-      me: 10.168.1.12
-      signer1st:
-              order: 1
-              host: 10.168.1.10
-      signer2nd:
-              order: 2
-              host: 10.168.1.11
+      my_share: 3
+      ansible_host: "{{ signer3 }}"
+  vars:
+    signer1: 1.1.1.1
+    signer2: 2.2.2.2
+    signer3: 3.3.3.3
+
+    var_file: "group_vars/mainnets/{{ target }}.yml"
+    ansible_user: ubuntu
+    ansible_port: 22
+    horcrux_user: hcx
+    horcrux_password: 'my-encrypted-password'
