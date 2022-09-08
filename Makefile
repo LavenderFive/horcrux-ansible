@@ -1,7 +1,9 @@
 # Functions
 nam = $(firstword $(subst :, ,$1))
 val = $(or $(word 2,$(subst ": ", , $1)),$(value 2))
-hostarch:=darwin_arm64
+# edit this to darwin_arm64 if you are using an m1 mac and get the error:
+# "cannot execute binary file: Exec format error"
+hostarch:=linux_amd64
 tmphorcruxVer := $(shell grep horcrux_version group_vars/all.yml)
 tmphorcruxRepo := $(shell grep horcrux_repo group_vars/all.yml)
 horcruxVer = $(subst $\',,$(call val,$(tmphorcruxVer)))
@@ -32,15 +34,6 @@ ifeq (,$(wildcard ${OUT_DIR}/horcrux))
 	tar -xf ${OUT_DIR}/horcrux.tgz -C ${OUT_DIR}
 endif
 
-
-#
-# generate an empty config
-#
-emptyconfig: hostbinaries
-ifeq (,$(wildcard ${KEYS_DIR}/config.yaml))
-	touch ${KEYS_DIR}/config.yaml
-endif
-
 deps: hostbinaries
 ifeq (,$(wildcard ${KEYS_DIR}/priv_validator_key.json))
 	@echo "Missing priv_validator_key.json. Place it here: ${KEYS_DIR}/priv_validator_key.json"
@@ -52,7 +45,7 @@ endif
 #
 # Generate keys from validator private key
 #
-genkeys: deps emptyconfig
+genkeys: deps
 	cd ${KEYS_DIR} && ../${HORCRUX_HOST} create-shares --home . priv_validator_key.json 2 3
 
 test:
