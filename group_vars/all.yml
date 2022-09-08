@@ -9,7 +9,6 @@ horcrux_version: 'v2.0.0'
 rpc_timeout: "1000ms"
 threshold: 2
 shares: 3
-ansible_ssh_private_key_file: "~/.ssh/id_ed25519"
 path: "/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin:{{ horcrux_home }}/go/bin"
 horcrux_home: "/home/{{ horcrux_user }}"
 horcrux_dir: "{{ horcrux_home }}/.horcrux/{{ network }}"
