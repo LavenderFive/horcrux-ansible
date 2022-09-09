@@ -10,7 +10,7 @@
 - name: Set authorized keys
   authorized_key:
     user: "{{ horcrux_user }}"
-    key: "{{ lookup('file', {{ ansible_ssh_private_key_file }}.pub ) }}"
+    key: "{{ pubkey_file }}"
 
 - name: Allow sudo for administrator
   copy:
@@ -23,3 +23,4 @@
     proto: tcp
     from: "{{ item.p2p_addr }}"
   loop: "{{ horcrux_peers }}"
+  when: shares > 1

@@ -1,12 +1,12 @@
 [Unit]
-Description={{ chain_id }}  Signer node {{ my_share }}
+Description={{ chain_id }} Signer node {{ my_share }}
 After=network.target
 
 [Service]
 Type=simple
 User={{ horcrux_user }}
 WorkingDirectory={{ horcrux_home }}
-ExecStart={{ horcrux_home }}/go/bin/horcrux cosigner start --home {{ horcrux_dir }}
+ExecStart={{ horcrux_home }}/go/bin/horcrux {% if shares > 1 %}co{% endif %}signer start --home {{ horcrux_dir }}
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=4096

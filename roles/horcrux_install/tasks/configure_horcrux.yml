@@ -28,6 +28,18 @@
     group: "{{ horcrux_user }}"
     mode: '0644'
   tags: configs
+  when: shares > 1
+
+- name: Copy Single-Signer config
+  template:
+    backup: yes
+    src: single_config.yaml
+    dest: "{{ horcrux_dir }}/config.yaml"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    mode: '0644'
+  tags: configs
+  when: shares == 1
 
 - name: Copy horcrux service file
   become: true

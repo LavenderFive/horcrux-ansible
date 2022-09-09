@@ -1,0 +1,7 @@
+home-dir: {{ horcrux_dir }}
+chain-id: {{ chain_id }}
+chain-nodes:
+{% for sentry in sentries %}
+- priv-val-addr: tcp://{{ sentry }}
+{% endfor %}
+
