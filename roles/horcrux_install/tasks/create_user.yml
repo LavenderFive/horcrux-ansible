@@ -24,3 +24,11 @@
     from: "{{ item.p2p_addr }}"
   loop: "{{ horcrux_peers }}"
   when: shares > 1
+
+- name: Create alias file
+  template:
+    src: bash_aliases.j2
+    dest: '/home/{{ item.name }}/.bash_aliases'
+    owner: '{{ item.name }}'
+    group: '{{ item.name }}'
+    mode: '0644'
