@@ -28,7 +28,7 @@
 - name: Create alias file
   template:
     src: bash_aliases.j2
-    dest: '/home/{{ item.name }}/.bash_aliases'
-    owner: '{{ item.name }}'
-    group: '{{ item.name }}'
+    dest: '{{ horcrux_home }}/.bash_aliases'
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
     mode: '0644'
