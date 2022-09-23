@@ -5,21 +5,24 @@
     dest: '{{ horcrux_home }}/horcrux'
     version: "{{ horcrux_version }}"
     update: yes
+  register: horcrux
 
 - name: Install horcrux
-  command: '{{ item }}'
-  args:
-    chdir: '{{ horcrux_home }}/horcrux'
-  with_items:
-    - 'make install'
-  environment:
-    PATH: '{{ path }}'
-    GOPATH: '{{ horcrux_home }}/go'
+    block:
+    command: '{{ item }}'
+    args:
+      chdir: '{{ horcrux_home }}/horcrux'
+    with_items:
+      - 'make install'
+    environment:
+      PATH: '{{ path }}'
+      GOPATH: '{{ horcrux_home }}/go'
 
-- name: Copy .profile
-  template:
-    src: 'profile.j2'
-    dest: '{{ horcrux_home }}/.profile'
-    owner: '{{ horcrux_user }}'
-    group: '{{ horcrux_user }}'
-    mode: '0600'
+  - name: Copy .profile
+    template:
+      src: 'profile.j2'
+      dest: '{{ horcrux_home }}/.profile'
+      owner: '{{ horcrux_user }}'
+      group: '{{ horcrux_user }}'
+      mode: '0600'
+  when: horcrux.changed

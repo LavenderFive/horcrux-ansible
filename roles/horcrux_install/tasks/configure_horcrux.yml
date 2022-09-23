@@ -19,6 +19,16 @@
     - priv_validator_state.json
     - share_sign_state.json
 
+- name: Copy horcrux service file
+  become: true
+  template:
+    src: 'horcrux.service.j2'
+    dest: '/etc/systemd/system/{{ service_file }}'
+    owner: root
+    group: root
+    mode: 600
+  register: systemdunit
+
 - name: Copy config
   template:
     backup: yes
@@ -28,6 +38,7 @@
     group: "{{ horcrux_user }}"
     mode: '0644'
   tags: configs
+  register: config_multi
   when: shares > 1
 
 - name: Copy Single-Signer config
@@ -39,21 +50,33 @@
     group: "{{ horcrux_user }}"
     mode: '0644'
   tags: configs
+  register: config_single
   when: shares == 1
 
-- name: Copy horcrux service file
-  become: true
-  template:
-    src: 'horcrux.service.j2'
-    dest: '/etc/systemd/system/{{ service_file }}'
-    owner: root
-    group: root
-    mode: 600
-  register: systemdunit
+- name: delete raft
+  block:
+    - name: stop horcrux service
+      systemd:
+        daemon_reload: yes
+        name: "{{ service_file }}"
+        state: stopped
+        enabled: yes
+
+    - name: delete raft directory
+      file:
+        path: "{{ horcrux_dir }}/raft/"
+        state: absent
+
+    - name: delete horcrux process
+      file:
+        path: "{{ horcrux_dir }}/horcrux.pid"
+        state: absent
+  when: config_multi.changed or config_single.changed
 
 - name: Enable systemd unit
   systemd:
     daemon_reload: yes
     name: "{{ service_file }}"
+    state: restarted
     enabled: yes
-  when: systemdunit.changed
+  when: systemdunit.changed or config_multi.changed or config_single.changed

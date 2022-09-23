@@ -1,34 +1,42 @@
 ---
-- name: Create horcrux user
-  user:
-    name: '{{ horcrux_user }}'
-    home: '{{ horcrux_home }}'
-    password: '{{ horcrux_password }}'
-    shell: /bin/bash
-    password_lock: true
+- name: check if Horcrux user exists
+  stat:
+    path: '/home/{{ horcrux_user }}'
+  register: user
 
-- name: Set authorized keys
-  authorized_key:
-    user: "{{ horcrux_user }}"
-    key: "{{ pubkey_file }}"
+- name: Setup user config
+  block:
+  - name: Setup User
+    user:
+      name: '{{ horcrux_user }}'
+      home: '{{ horcrux_home }}'
+      password: '{{ horcrux_password }}'
+      shell: /bin/bash
+      password_lock: true
 
-- name: Allow sudo for administrator
-  copy:
-    content: '{{ horcrux_user }} ALL=(ALL:ALL) NOPASSWD: ALL'
-    dest: '/etc/sudoers.d/{{ horcrux_user }}'
+  - name: Set authorized keys
+    authorized_key:
+      user: "{{ horcrux_user }}"
+      key: "{{ pubkey_file }}"
 
-- name: Open ssh port
-  ufw:
-    rule: allow
-    proto: tcp
-    from: "{{ item.p2p_addr }}"
-  loop: "{{ horcrux_peers }}"
-  when: shares > 1
+  - name: Allow sudo for administrator
+    copy:
+      content: '{{ horcrux_user }} ALL=(ALL:ALL) NOPASSWD: ALL'
+      dest: '/etc/sudoers.d/{{ horcrux_user }}'
 
-- name: Create alias file
-  template:
-    src: bash_aliases.j2
-    dest: '{{ horcrux_home }}/.bash_aliases'
-    owner: '{{ horcrux_user }}'
-    group: '{{ horcrux_user }}'
-    mode: '0644'
+  - name: Open ssh port
+    ufw:
+      rule: allow
+      proto: tcp
+      from: "{{ item.p2p_addr }}"
+    loop: "{{ horcrux_peers }}"
+    when: shares > 1
+
+  - name: Create alias file
+    template:
+      src: bash_aliases.j2
+      dest: '{{ horcrux_home }}/.bash_aliases'
+      owner: '{{ horcrux_user }}'
+      group: '{{ horcrux_user }}'
+      mode: '0644'
+  when: not user.stat.exists

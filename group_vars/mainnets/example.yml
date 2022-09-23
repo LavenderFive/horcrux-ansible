@@ -2,10 +2,10 @@
 network: akash
 chain_id: akashnet-2
 sentries: 
-  - '1.0.2.1:17659'
-  - '1.2.3.4:12859'
+  - '1.0.2.1:{{ signer_port }}59'
+  - '1.2.3.4:{{ signer_port }}59'
 
 signer_port: 153
-rpc_timeout: "750ms"
+rpc_timeout: "1000ms"
 threshold: 2
 shares: 3
