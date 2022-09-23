@@ -5,4 +5,4 @@ sentries:
   - '1.0.2.1:{{ signer_port }}59'
   - '1.2.3.4:{{ signer_port }}59'
 
-signer_port: 153
+signer_port: 
