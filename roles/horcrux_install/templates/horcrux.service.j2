@@ -9,7 +9,7 @@ WorkingDirectory={{ horcrux_home }}
 ExecStart={{ horcrux_home }}/go/bin/horcrux {% if shares > 1 %}co{% endif %}signer start --home {{ horcrux_dir }}
 Restart=on-failure
 RestartSec=3
-LimitNOFILE=4096
+LimitNOFILE=infinity
 
 [Install]
 WantedBy=multi-user.target
