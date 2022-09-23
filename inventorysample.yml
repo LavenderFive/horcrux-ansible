@@ -21,3 +21,6 @@ all:
     ansible_port: 22
     horcrux_user: hcx
     horcrux_password: 'my-encrypted-password'
+    rpc_timeout: "1000ms"
+    threshold: 2
+    shares: 3
