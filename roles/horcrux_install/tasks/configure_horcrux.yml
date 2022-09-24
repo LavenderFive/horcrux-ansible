@@ -73,6 +73,10 @@
         state: absent
   when: config_multi.changed or config_single.changed
 
+- name: Pause restart to miss a few blocks
+  pause:
+    seconds: 15
+
 - name: Enable systemd unit
   systemd:
     daemon_reload: yes
