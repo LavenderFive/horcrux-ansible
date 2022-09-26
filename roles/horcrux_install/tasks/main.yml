@@ -1,4 +1,7 @@
 ---
+- name: Define signer port
+  import_tasks: identify_port.yml
+
 - name: Create horcrux user
   import_tasks: create_user.yml
 

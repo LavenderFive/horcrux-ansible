@@ -1,0 +1,16 @@
+---
+- name: get port prefixes
+  uri:
+    url: '{{ port_prefix_url }}'
+    method: GET
+    return_content: true
+    status_code: 200
+    body_format: json
+  register: port_prefixes
+  when: port_prefix_url is defined
+  run_once: true
+
+- name: define signer_port
+  set_fact:
+    signer_port: '{{ port_prefixes.json[network] }}'
+
