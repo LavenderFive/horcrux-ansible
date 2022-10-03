@@ -11,8 +11,8 @@ threshold: 2
 shares: 3
 path: "/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin:{{ horcrux_home }}/go/bin"
 horcrux_home: "/home/{{ horcrux_user }}"
-horcrux_dir: "{{ horcrux_home }}/.horcrux/{{ network }}"
-service_file: "horcrux_{{ network }}.service"
+horcrux_dir: "{{ horcrux_home }}/.horcrux/{{ target }}"
+service_file: "horcrux_{{ target }}.service"
 
 horcrux_peers:
   - share_id: 1
