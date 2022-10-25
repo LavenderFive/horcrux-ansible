@@ -17,4 +17,4 @@
 
 - name: define signer_port
   set_fact:
-    signer_port: '{{ prefixes[network] }}'
+    signer_port: '{{ signer_port | default(prefixes[network]) }}'
