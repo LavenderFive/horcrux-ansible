@@ -4,4 +4,3 @@ chain-nodes:
 {% for sentry in sentries %}
 - priv-val-addr: tcp://{{ sentry }}
 {% endfor %}
-
