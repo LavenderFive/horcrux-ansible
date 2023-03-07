@@ -1,0 +1,7 @@
+---
+- name: Stop and disable systemd unit
+  systemd:
+    daemon_reload: yes
+    name: "{{ service_file }}"
+    state: stopped
+    enabled: no
