@@ -7,10 +7,10 @@ Type=simple
 User={{ horcrux_user }}
 WorkingDirectory={{ horcrux_home }}
 ExecStart={{ horcrux_home }}/go/bin/horcrux {% if shares > 1 %}co{% endif %}signer start --home {{ horcrux_dir }}
-ExecStartPre=rm -f /var/lib/sif-hc/.horcrux/horcrux.pid
-ExecStartPost=rm -f /var/lib/sif-hc/.horcrux/horcrux.pid
+ExecStartPre=rm -f {{ horcrux_home }}/{{ horcrux_dir }}/horcrux.pid
+ExecStartPost=rm -f {{ horcrux_home }}/{{ horcrux_dir }}/horcrux.pid
 Restart=on-failure
-RestartSec=3
+RestartSec=7
 LimitNOFILE=infinity
 
 [Install]
