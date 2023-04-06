@@ -6,6 +6,7 @@
   vars_files:
     - '{{ var_file }}'
   roles:
+    - identify_port
     - horcrux_install
     - horcrux_configure
     - horcrux_create_shares
