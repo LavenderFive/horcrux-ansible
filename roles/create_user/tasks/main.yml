@@ -5,6 +5,7 @@
   register: user
 
 - name: Setup user config
+  when: not user.stat.exists
   block:
   - name: Setup User
     user:
@@ -39,4 +40,3 @@
       owner: '{{ horcrux_user }}'
       group: '{{ horcrux_user }}'
       mode: '0644'
-  when: not user.stat.exists
