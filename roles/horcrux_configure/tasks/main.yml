@@ -1,0 +1,39 @@
+---
+- name: Create horcrux directory
+  file:
+    owner: '{{ horcrux_user }}'
+    group: '{{ horcrux_user }}'
+    state: directory
+    path: '{{ horcrux_dir }}/state'
+    mode: '0750'
+
+- name: Create state files
+  template:
+    src: priv_validator_state.json
+    dest: "{{ horcrux_dir }}/state/{{ chain_id }}_{{ item }}"
+    mode: '0600'
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    force: no
+  with_items:
+    - priv_validator_state.json
+    - share_sign_state.json
+
+- name: configure multi-signer horcrux
+  import_tasks: configure_multi_signer.yml
+  when: shares > 1
+
+- name: configure single-signer horcrux
+  import_tasks: configure_single_signer.yml
+  when: shares > 1
+
+- name: Copy horcrux service file
+  become: true
+  notify: Restart Horcrux
+  template:
+    src: 'horcrux.service.j2'
+    dest: '/etc/systemd/system/{{ service_file }}'
+    owner: root
+    group: root
+    mode: 600
+  register: systemdunit

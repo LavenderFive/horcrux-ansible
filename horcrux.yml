@@ -7,3 +7,4 @@
     - '{{ var_file }}'
   roles:
     - horcrux_install
+    - horcrux_configure

@@ -1,77 +1,77 @@
 - name: Find priv_validator_key.json
   delegate_to: localhost
-  become: no
+  become: false
   stat:
     path: "{{ playbook_dir }}/keys/priv_validator_key.json"
   register: key_exists
 
 - name: Generate and move keys
   block:
-  - name: Generate private keys
-    become: false
-    local_action: command make genkeys
-    run_once: true
+    - name: Generate private keys
+      become: false
+      local_action: command make genkeys
+      run_once: true
 
-  - name: Find local key share
-    delegate_to: localhost
-    become: no
-    stat:
-      path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
-    register: has_share
+    - name: Find local key share
+      delegate_to: localhost
+      become: false
+      stat:
+        path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
+      register: has_share
 
-  - name: Copy keys
-    copy:
-      src: "keys/private_share_{{ my_share }}.json"
-      dest: "{{ horcrux_dir }}/share.json"
-      owner: "{{ horcrux_user }}"
-      group: "{{ horcrux_user }}"
-      mode: '0400'
-    when: has_share.stat.isreg is defined and has_share.stat.isreg
+    - name: Copy keys
+      copy:
+        src: "keys/private_share_{{ my_share }}.json"
+        dest: "{{ horcrux_dir }}/share.json"
+        owner: "{{ horcrux_user }}"
+        group: "{{ horcrux_user }}"
+        mode: '0400'
+      when: has_share.stat.isreg is defined and has_share.stat.isreg
 
-  - name: Find remote key share
-    stat:
-      path: "{{ horcrux_dir }}/share.json"
-    register: share_moved
+    - name: Find remote key share
+      stat:
+        path: "{{ horcrux_dir }}/share.json"
+      register: share_moved
 
-  - name: Delete local share
-    become: false
-    delegate_to: localhost
-    file:
-      path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
-      state: absent
-    when: share_moved.stat.exists
+    - name: Delete local share
+      become: false
+      delegate_to: localhost
+      file:
+        path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
+        state: absent
+      when: share_moved.stat.exists
 
-  - name: Delete priv_validator_key.json
-    become: false
-    delegate_to: localhost
-    file:
-      path: "{{ playbook_dir }}/keys/priv_validator_key.json"
-      state: absent
-    run_once: true
-    when: share_moved.stat.exists
+    - name: Delete priv_validator_key.json
+      become: false
+      delegate_to: localhost
+      file:
+        path: "{{ playbook_dir }}/keys/priv_validator_key.json"
+        state: absent
+      run_once: true
+      when: share_moved.stat.exists
   when: key_exists.stat.exists and shares > 1
 
 - name: (Single Signer) Move key
   block:
-  - name: Copy keys
-    copy:
-      src: "keys/priv_validator_key.json"
-      dest: "{{ horcrux_dir }}/priv_validator_key.json"
-      owner: "{{ horcrux_user }}"
-      group: "{{ horcrux_user }}"
-      mode: '0400'
+    - name: Copy keys
+      copy:
+        src: "keys/priv_validator_key.json"
+        dest: "{{ horcrux_dir }}/priv_validator_key.json"
+        owner: "{{ horcrux_user }}"
+        group: "{{ horcrux_user }}"
+        mode: '0400'
 
-  - name: Find remote key share
-    stat:
-      path: "{{ horcrux_dir }}/priv_validator_key.json"
-    register: share_moved
+    - name: Find remote key share
+      stat:
+        path: "{{ horcrux_dir }}/priv_validator_key.json"
+      register: share_moved
 
-  - name: Delete priv_validator_key.json
-    become: false
-    delegate_to: localhost
-    file:
-      path: "{{ playbook_dir }}/keys/priv_validator_key.json"
-      state: absent
-    run_once: true
-    when: share_moved.stat.exists
+    - name: Delete priv_validator_key.json
+      become: false
+      delegate_to: localhost
+      file:
+        path: "{{ playbook_dir }}/keys/priv_validator_key.json"
+        state: absent
+      run_once: true
+      when: share_moved.stat.exists
   when: key_exists.stat.exists and shares == 1

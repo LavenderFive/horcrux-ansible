@@ -1,0 +1,31 @@
+---
+- name: copy config
+  template:
+    backup: yes
+    src: config.yaml
+    dest: "{{ horcrux_dir }}/config.yaml"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    mode: '0644'
+  tags: configs
+  register: config_multi
+
+- name: delete raft
+  when: config_multi.changed
+  block:
+    - name: stop horcrux service
+      systemd:
+        daemon_reload: yes
+        name: "{{ service_file }}"
+        state: stopped
+        enabled: yes
+
+    - name: delete raft directory
+      file:
+        path: "{{ horcrux_dir }}/raft/"
+        state: absent
+
+    - name: delete horcrux process
+      file:
+        path: "{{ horcrux_dir }}/horcrux.pid"
+        state: absent

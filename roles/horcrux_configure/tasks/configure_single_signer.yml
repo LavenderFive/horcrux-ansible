@@ -1,0 +1,12 @@
+---
+- name: copy config
+  template:
+    backup: yes
+    src: single_config.yaml
+    dest: "{{ horcrux_dir }}/config.yaml"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
+    mode: '0644'
+  tags: configs
+  register: config_single
+
