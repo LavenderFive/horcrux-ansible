@@ -1,0 +1,8 @@
+---
+- name: Restart Horcrux
+  systemd:
+    daemon_reload: yes
+    name: "{{ service_file }}"
+    state: restarted
+    enabled: yes
+  when: key_exists.stat.exists

@@ -25,7 +25,7 @@
 
 - name: configure single-signer horcrux
   import_tasks: configure_single_signer.yml
-  when: shares > 1
+  when: shares == 1
 
 - name: Copy horcrux service file
   become: true

@@ -1,0 +1,19 @@
+---
+- name: Find priv_validator_key.json
+  delegate_to: localhost
+  become: false
+  stat:
+    path: "{{ playbook_dir }}/keys/priv_validator_key.json"
+  register: key_exists
+
+- name: Move shares
+  when: key_exists.stat.exists
+  notify: Restart Horcrux
+  block:
+    - name: move multi-signer shares
+      import_tasks: move_multi_share.yml
+      when: shares > 1
+
+    - name: move single-signer shares
+      import_tasks: move_single_share.yml
+      when: shares == 1

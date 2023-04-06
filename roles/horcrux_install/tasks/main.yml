@@ -8,6 +8,3 @@
 
 - name: Install horcrux
   import_tasks: install_horcrux.yml
-
-- name: Create and move keys
-  import_tasks: create_shares.yml

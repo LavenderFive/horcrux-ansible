@@ -8,3 +8,5 @@
   roles:
     - horcrux_install
     - horcrux_configure
+    - horcrux_create_shares
+
