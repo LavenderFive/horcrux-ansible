@@ -11,9 +11,9 @@
   notify: Restart Horcrux
   block:
     - name: move multi-signer shares
-      import_tasks: move_multi_share.yml
+      import_tasks: create_multi_share.yml
       when: shares > 1
 
     - name: move single-signer shares
-      import_tasks: move_single_share.yml
+      import_tasks: create_single_share.yml
       when: shares == 1

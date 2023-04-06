@@ -1,20 +1,23 @@
 ---
-- name: get port prefixes
-  uri:
-    url: '{{ port_prefix_url }}'
-    method: GET
-    return_content: true
-    status_code: 200
-    body_format: json
-  register: port_prefixes
-  when: port_prefix_url is defined
-  run_once: true
+- name: identify port prefixes
+  when: signer_port is not defined
+  block:
+    - name: get port prefixes
+      uri:
+        url: '{{ port_prefix_url }}'
+        method: GET
+        return_content: true
+        status_code: 200
+        body_format: json
+      register: port_prefixes
+      when: port_prefix_url is defined
+      run_once: true
 
-- name: set response as json
-  set_fact:
-    prefixes: '{{ port_prefixes.content | from_json }}'
-  when: port_prefix_url is defined
+    - name: set response as json
+      set_fact:
+        prefixes: '{{ port_prefixes.content | from_json }}'
+      when: port_prefix_url is defined
 
-- name: define signer_port
-  set_fact:
-    signer_port: '{{ signer_port | default(prefixes[network]) }}'
+    - name: define signer_port
+      set_fact:
+        signer_port: '{{ signer_port | default(prefixes[network]) }}'

@@ -1,6 +1,25 @@
 ---
-- name: Install node
-  hosts: all
+- name: Define hosts
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - '{{ var_file }}'
+  tasks:
+    - name: add single signer
+      when: shares == 1
+      add_host: 
+        hostname: signer1
+        group: signers
+    
+    - name: add all signers
+      when: shares > 1
+      add_host: 
+        hostname: '{{ item }}'
+        group: signers
+      loop: '{{ groups["all"] }}'
+
+- name: Install Horcrux
+  hosts: signers
   become: true
   gather_facts: false
   vars_files:
@@ -10,4 +29,3 @@
     - horcrux_install
     - horcrux_configure
     - horcrux_create_shares
-
