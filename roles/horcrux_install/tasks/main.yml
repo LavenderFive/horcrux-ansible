@@ -19,11 +19,3 @@
       environment:
         PATH: '{{ path }}'
         GOPATH: '{{ horcrux_home }}/go'
-
-    - name: Copy .profile
-      template:
-        src: 'profile.j2'
-        dest: '{{ horcrux_home }}/.profile'
-        owner: '{{ horcrux_user }}'
-        group: '{{ horcrux_user }}'
-        mode: '0600'

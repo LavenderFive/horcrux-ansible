@@ -5,4 +5,4 @@
     name: "{{ service_file }}"
     state: restarted
     enabled: yes
-  when: systemdunit.changed or config_multi.changed or config_single.changed
+  

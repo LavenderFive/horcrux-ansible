@@ -19,17 +19,9 @@
     - priv_validator_state.json
     - share_sign_state.json
 
-- name: configure multi-signer horcrux
-  import_tasks: configure_multi_signer.yml
-  when: shares > 1
-
-- name: configure single-signer horcrux
-  import_tasks: configure_single_signer.yml
-  when: shares == 1
-
 - name: Copy horcrux service file
-  become: true
   notify: Restart Horcrux
+  become: true
   template:
     src: 'horcrux.service.j2'
     dest: '/etc/systemd/system/{{ service_file }}'
@@ -37,3 +29,26 @@
     group: root
     mode: 600
   register: systemdunit
+
+- name: configure horcrux
+  notify: Restart Horcrux
+  block:
+    - name: configure multi-signer horcrux
+      import_tasks: configure_multi_signer.yml
+      when: shares > 1
+
+    - name: configure single-signer horcrux
+      import_tasks: configure_single_signer.yml
+      when: shares == 1
+
+- name: Pause restart to miss a few blocks
+  pause:
+    seconds: 7
+
+- name: Restart Horcrux
+  systemd:
+    daemon_reload: yes
+    name: "{{ service_file }}"
+    state: restarted
+    enabled: yes
+  when: systemdunit.changed or config_multi.changed or config_single.changed

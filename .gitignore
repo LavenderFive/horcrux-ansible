@@ -1,5 +1,4 @@
 inventory.*
-group_vars/mainnets/*
-group_vars/testnets/*
+group_vars/networks*
 keys/*
 hostbin/*
