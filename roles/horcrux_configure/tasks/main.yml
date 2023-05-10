@@ -1,23 +1,34 @@
 ---
-- name: Create horcrux directory
-  file:
-    owner: '{{ horcrux_user }}'
-    group: '{{ horcrux_user }}'
-    state: directory
+- name: Check if horcrux has already been setup
+  stat:
     path: '{{ horcrux_dir }}/state'
-    mode: '0750'
+  register: dir
 
-- name: Create state files
-  template:
-    src: priv_validator_state.json
-    dest: "{{ horcrux_dir }}/state/{{ chain_id }}_{{ item }}"
-    mode: '0600'
-    owner: "{{ horcrux_user }}"
-    group: "{{ horcrux_user }}"
-    force: no
-  with_items:
-    - priv_validator_state.json
-    - share_sign_state.json
+- debug:
+    var: dir
+
+- name: Create horcrux directory and initial state files
+  when: not dir.stat.exists
+  block:
+    - name: Create horcrux directory
+      file:
+        owner: '{{ horcrux_user }}'
+        group: '{{ horcrux_user }}'
+        state: directory
+        path: '{{ horcrux_dir }}/state'
+        mode: '0750'
+
+    - name: Create state files
+      template:
+        src: priv_validator_state.json
+        dest: "{{ horcrux_dir }}/state/{{ chain_id }}_{{ item }}"
+        mode: '0600'
+        owner: "{{ horcrux_user }}"
+        group: "{{ horcrux_user }}"
+        force: no
+      with_items:
+        - priv_validator_state.json
+        - share_sign_state.json
 
 - name: Copy horcrux service file
   notify: Restart Horcrux
