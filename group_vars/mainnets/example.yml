@@ -1,0 +1,6 @@
+---
+network: terra2
+chain_id: phoenix-1
+sentries: 
+  - '1.2.3.4:{{ signer_port }}59'
+  - '1.2.3.4:{{ signer_port }}59'
