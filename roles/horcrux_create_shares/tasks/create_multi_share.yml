@@ -6,60 +6,44 @@
       run_once: true
       shell: |
         cd {{ playbook_dir }}/keys
-        ../hostbin/horcrux create-ecies-shards --shards {{ shares }}
+        {{ item }}
+      loop:
+        - "../hostbin/horcrux create-ecies-shards --shards {{ shares }}"
+        - "../hostbin/horcrux create-ed25519-shards --chain-id {{ chain_id }} --key-file ./priv_validator_key.json --threshold {{ threshold }} --shards {{ shares }}"    
 
-    - name: Generate private keys
-      become: false
-      delegate_to: localhost
-      shell: |
-        cd {{ playbook_dir }}/keys
-        ../hostbin/horcrux create-ed25519-shards --chain-id {{ chain_id }} --key-file ./priv_validator_key.json --threshold {{ threshold }} --shards {{ shares }}
-      run_once: true
+    - name: Move keys to remote host
+      block:
+        - name: Find local key share
+          delegate_to: localhost
+          become: false
+          stat:
+            path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/{{ item }}"
+          register: has_share
 
-    - name: Find local key share
-      delegate_to: localhost
-      become: false
-      stat:
-        path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/{{ chain_id }}_shard.json"
-      register: has_share
+        - name: Copy keys
+          copy:
+            src: "keys/cosigner_{{ my_share}}/{{ item }}"
+            dest: "{{ horcrux_dir }}/{{ item }}"
+            owner: "{{ horcrux_user }}"
+            group: "{{ horcrux_user }}"
+            mode: '0400'
+          when: has_share.stat.isreg is defined and has_share.stat.isreg
 
-    - name: Copy keys
-      copy:
-        src: "keys/cosigner_{{ my_share}}/{{ chain_id }}_shard.json"
-        dest: "{{ horcrux_dir }}/{{ chain_id }}_shard.json"
-        owner: "{{ horcrux_user }}"
-        group: "{{ horcrux_user }}"
-        mode: '0400'
-      when: has_share.stat.isreg is defined and has_share.stat.isreg
+        - name: Find remote key share
+          stat:
+            path: "{{ horcrux_dir }}/{{ item }}"
+          register: share_moved
 
-    - name: Find local ecies key
-      delegate_to: localhost
-      become: false
-      stat:
-        path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/ecies_keys.json"
-      register: ecies_share
-
-    - name: Copy ecies key
-      copy:
-        src: "keys/cosigner_{{ my_share}}/ecies_keys.json"
-        dest: "{{ horcrux_dir }}/ecies_keys.json"
-        owner: "{{ horcrux_user }}"
-        group: "{{ horcrux_user }}"
-        mode: '0400'
-      when: ecies_share.stat.isreg is defined and ecies_share.stat.isreg
-
-    - name: Find remote key share
-      stat:
-        path: "{{ horcrux_dir }}/share.json"
-      register: share_moved
-
-    - name: Delete local share
-      become: false
-      delegate_to: localhost
-      file:
-        path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
-        state: absent
-      when: share_moved.stat.exists
+        - name: Delete local share
+          become: false
+          delegate_to: localhost
+          file:
+            path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/{{ item }}"
+            state: absent
+          when: share_moved.stat.exists
+      loop:
+        - "{{ chain_id }}_shard.json"
+        - "ecies_keys.json"
 
     - name: Delete priv_validator_key.json
       become: false

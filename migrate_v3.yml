@@ -25,8 +25,8 @@
   vars_files:
     - '{{ var_file }}'
   roles:
-    - backup
     - horcrux_shutdown
+    - backup
 
 - name: Install Horcrux
   hosts: signers
