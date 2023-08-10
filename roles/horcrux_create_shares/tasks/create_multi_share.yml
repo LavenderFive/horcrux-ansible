@@ -1,7 +1,8 @@
 ---
 - name: Generate and move keys
   block:
-    - name: Generate ECIES shards
+    - name: Generate key shards
+      become: false
       delegate_to: localhost
       run_once: true
       shell: |
@@ -12,35 +13,7 @@
         - "../hostbin/horcrux create-ed25519-shards --chain-id {{ chain_id }} --key-file ./priv_validator_key.json --threshold {{ threshold }} --shards {{ shares }}"    
 
     - name: Move keys to remote host
-      block:
-        - name: Find local key share
-          delegate_to: localhost
-          become: false
-          stat:
-            path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/{{ item }}"
-          register: has_share
-
-        - name: Copy keys
-          copy:
-            src: "keys/cosigner_{{ my_share}}/{{ item }}"
-            dest: "{{ horcrux_dir }}/{{ item }}"
-            owner: "{{ horcrux_user }}"
-            group: "{{ horcrux_user }}"
-            mode: '0400'
-          when: has_share.stat.isreg is defined and has_share.stat.isreg
-
-        - name: Find remote key share
-          stat:
-            path: "{{ horcrux_dir }}/{{ item }}"
-          register: share_moved
-
-        - name: Delete local share
-          become: false
-          delegate_to: localhost
-          file:
-            path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/{{ item }}"
-            state: absent
-          when: share_moved.stat.exists
+      include_tasks: move_multi_share.yml
       loop:
         - "{{ chain_id }}_shard.json"
         - "ecies_keys.json"
