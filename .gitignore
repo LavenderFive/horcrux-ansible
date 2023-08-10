@@ -2,3 +2,4 @@ inventory.*
 group_vars/networks*
 keys/*
 hostbin/*
+.vscode/settings.json
