@@ -14,12 +14,6 @@
     path: "{{ horcrux_dir }}/"
     state: absent
 
-- name: Backup Horcrux binary
-  copy:
-    src: "{{ horcrux_home }}/go/bin/horcrux"
-    dest: "{{ horcrux_home }}/go/bin/b.horcrux"
-    remote_src: true
-
 - name: Backup Horcrux service file
   become: true
   copy:
