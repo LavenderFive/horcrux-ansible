@@ -1,26 +1,24 @@
 ---
 - name: Copy Horcrux dir
-  remote_source: true
   copy:
-    src: "{{ horcrux_dir }}"
-    dest: "{{ horcrux_dir }}.backup"
+    remote_src: true
+    src: "{{ horcrux_dir }}/"
+    dest: "{{ horcrux_home }}/.horcrux/b.{{ target }}/"
 
 - name: Delete old Horcrux dir
   file:
-    path: "{{ horcrux_dir }}"
+    path: "{{ horcrux_dir }}/"
     state: absent
-  run_once: true
-  remote_source: true
 
 - name: Backup Horcrux binary
-  remote_source: true
   copy:
     src: "{{ horcrux_home }}/go/bin/horcrux"
-    dest: "{{ horcrux_home }}/go/bin/horcrux.backup"
+    dest: "{{ horcrux_home }}/go/bin/b.horcrux"
+    remote_src: true
 
 - name: Backup Horcrux service file
-  remote_source: true
   become: true
   copy:
-    src: "/etc/systemd/system/{{ service_file }}'"
-    dest: "/etc/systemd/system/{{ service_file }}'.backup"
+    src: "/etc/systemd/system/{{ service_file }}"
+    dest: "/etc/systemd/system/b.{{ service_file }}"
+    remote_src: true
