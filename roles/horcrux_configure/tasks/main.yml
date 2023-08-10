@@ -4,9 +4,6 @@
     path: '{{ horcrux_dir }}/state'
   register: dir
 
-- debug:
-    var: dir
-
 - name: Create horcrux directory and initial state files
   when: not dir.stat.exists
   block:
