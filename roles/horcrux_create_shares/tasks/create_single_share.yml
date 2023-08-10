@@ -4,14 +4,14 @@
     - name: Copy keys
       copy:
         src: "keys/priv_validator_key.json"
-        dest: "{{ horcrux_dir }}/priv_validator_key.json"
+        dest: "{{ horcrux_dir }}/{{ chain_id }}_priv_validator_key.json"
         owner: "{{ horcrux_user }}"
         group: "{{ horcrux_user }}"
         mode: '0400'
 
     - name: Find remote key share
       stat:
-        path: "{{ horcrux_dir }}/priv_validator_key.json"
+        path: "{{ horcrux_dir }}/{{ chain_id }}_priv_validator_key.json"
       register: share_moved
 
     - name: Delete priv_validator_key.json
