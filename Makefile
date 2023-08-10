@@ -46,7 +46,10 @@ endif
 # Generate keys from validator private key
 #
 genkeys: deps
-	cd ${KEYS_DIR} && ../${HORCRUX_HOST} create-shares --home . priv_validator_key.json 2 3
+	cd ${KEYS_DIR} && ../${HORCRUX_HOST} create-ecies-shards --home . priv_validator_key.json 2 3
+
+getshards: deps
+	cd ${KEYS_DIR} && ../${HORCRUX_HOST} create-ecies-shards shards 3
 
 test:
 	@echo running ansible test..

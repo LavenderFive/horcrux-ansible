@@ -1,9 +1,19 @@
 ---
 - name: Generate and move keys
   block:
+    - name: Generate ECIES shards
+      delegate_to: localhost
+      run_once: true
+      shell: |
+        cd {{ playbook_dir }}/keys
+        ../hostbin/horcrux create-ecies-shards --shards {{ shares }}
+
     - name: Generate private keys
       become: false
-      local_action: command make genkeys
+      delegate_to: localhost
+      shell: |
+        cd {{ playbook_dir }}/keys
+        ../hostbin/horcrux create-ed25519-shards --chain-id {{ chain_id }} --key-file ./priv_validator_key.json --threshold {{ threshold }} --shards {{ shares }}
       run_once: true
 
     - name: Find local key share
