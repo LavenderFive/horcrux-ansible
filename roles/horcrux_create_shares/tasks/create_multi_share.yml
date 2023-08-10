@@ -20,17 +20,33 @@
       delegate_to: localhost
       become: false
       stat:
-        path: "{{ playbook_dir }}/keys/private_share_{{ my_share }}.json"
+        path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/{{ chain_id }}_shard.json"
       register: has_share
 
     - name: Copy keys
       copy:
-        src: "keys/private_share_{{ my_share }}.json"
-        dest: "{{ horcrux_dir }}/share.json"
+        src: "keys/cosigner_{{ my_share}}/{{ chain_id }}_shard.json"
+        dest: "{{ horcrux_dir }}/{{ chain_id }}_shard.json"
         owner: "{{ horcrux_user }}"
         group: "{{ horcrux_user }}"
         mode: '0400'
       when: has_share.stat.isreg is defined and has_share.stat.isreg
+
+    - name: Find local ecies key
+      delegate_to: localhost
+      become: false
+      stat:
+        path: "{{ playbook_dir }}/keys/cosigner_{{ my_share}}/ecies_keys.json"
+      register: ecies_share
+
+    - name: Copy ecies key
+      copy:
+        src: "keys/cosigner_{{ my_share}}/ecies_keys.json"
+        dest: "{{ horcrux_dir }}/ecies_keys.json"
+        owner: "{{ horcrux_user }}"
+        group: "{{ horcrux_user }}"
+        mode: '0400'
+      when: ecies_share.stat.isreg is defined and ecies_share.stat.isreg
 
     - name: Find remote key share
       stat:
