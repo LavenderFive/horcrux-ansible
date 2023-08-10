@@ -7,7 +7,7 @@
     update: yes
   register: horcrux
 
-- name: Setup horcrux
+- name: Install horcrux
   when: horcrux.changed
   block:
     - name: Install horcrux

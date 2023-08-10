@@ -3,7 +3,7 @@ thresholdMode:
   threshold: {{ threshold }}
   cosigners:
 {% for peer in horcrux_peers %}
-  - shardId: {{ peer.share_id }}
+  - shardID: {{ peer.share_id }}
     p2pAddr: tcp://{{ peer.p2p_addr }}:2{{ signer_port }}
 {% endfor %}
   grpcTimeout: {{ rpc_timeout }}
