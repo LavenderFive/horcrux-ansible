@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User={{ horcrux_user }}
 WorkingDirectory={{ horcrux_home }}
-ExecStart={{ horcrux_home }}/go/bin/horcrux {% if shares > 1 %}co{% endif %}signer start --home {{ horcrux_dir }} {% if shares == 1 %}--accept-risk{% endif %} 
+ExecStart={{ horcrux_home }}/go/bin/horcrux start --home {{ horcrux_dir }} {% if shares == 1 %}--accept-risk{% endif %} 
 ExecStartPre=/bin/sleep 7
 ExecStartPre=rm -f {{ horcrux_dir }}/horcrux.pid
 ExecStartPost=rm -f {{ horcrux_dir }}/horcrux.pid

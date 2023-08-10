@@ -1,19 +1,15 @@
-home-dir: {{ horcrux_dir }}
-chain-id: {{ chain_id }}
-cosigner:
+signMode: threshold
+thresholdMode:
   threshold: {{ threshold }}
-  shares: {{ shares }}
-  p2p-listen: tcp://{{ ansible_host }}:2{{ signer_port }}
-  peers:
+  cosigners:
 {% for peer in horcrux_peers %}
-{% if peer.share_id != my_share %}
-  - share-id: {{ peer.share_id }}
-    p2p-addr: tcp://{{ peer.p2p_addr }}:2{{ signer_port }}
-{% endif %}
+  - shardId: {{ peer.share_id }}
+    p2pAddr: tcp://{{ peer.p2p_addr }}:2{{ signer_port }}
 {% endfor %}
-  rpc-timeout: {{ rpc_timeout }}
-chain-nodes:
+  grpcTimeout: {{ rpc_timeout }}
+  raftTimeout: {{ raft_timeout }}
+chainNodes:
 {% for sentry in sentries %}
-- priv-val-addr: tcp://{{ sentry }}
+- privValAddr: tcp://{{ sentry }}
 {% endfor %}
-
+debugAddr: ""
