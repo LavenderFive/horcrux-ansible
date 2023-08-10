@@ -1,11 +1,15 @@
 ---
 - name: Copy Horcrux dir
+  become: true
   copy:
     remote_src: true
     src: "{{ horcrux_dir }}/"
     dest: "{{ horcrux_home }}/.horcrux/b.{{ target }}/"
+    owner: "{{ horcrux_user }}"
+    group: "{{ horcrux_user }}"
 
 - name: Delete old Horcrux dir
+  become: true
   file:
     path: "{{ horcrux_dir }}/"
     state: absent

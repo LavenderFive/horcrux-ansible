@@ -8,7 +8,6 @@
 
 - name: Move shares
   when: key_exists.stat.exists
-  notify: Restart Horcrux
   block:
     - name: move multi-signer shares
       import_tasks: create_multi_share.yml

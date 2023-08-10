@@ -28,7 +28,6 @@
         - share_sign_state.json
 
 - name: Copy horcrux service file
-  notify: Restart Horcrux
   become: true
   template:
     src: 'horcrux.service.j2'
@@ -39,7 +38,6 @@
   register: systemdunit
 
 - name: configure horcrux
-  notify: Restart Horcrux
   block:
     - name: configure multi-signer horcrux
       import_tasks: configure_multi_signer.yml
@@ -49,14 +47,3 @@
       import_tasks: configure_single_signer.yml
       when: shares == 1
 
-- name: Pause restart to miss a few blocks
-  pause:
-    seconds: 7
-
-- name: Restart Horcrux
-  systemd:
-    daemon_reload: yes
-    name: "{{ service_file }}"
-    state: restarted
-    enabled: yes
-  when: systemdunit.changed or config_multi.changed or config_single.changed
