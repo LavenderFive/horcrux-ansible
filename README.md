@@ -82,3 +82,29 @@ Please read the horcrux [document](https://github.com/strangelove-ventures/horcr
 
 ## Cleanup
 This ansible script creates a horcrux user (with limited capabilities).  It also requires `ansible_user` with full sudo access (no password). It is recommended that you completely remove this user after deploy, or at a minimum remove sudo access. Finally, the signer nodes should not expose ANY ports to the internet.
+
+
+# Sanity check
+
+If something is wrong, confirm the following:
+
+## horcrux config.yaml
+Confirm that the config.toml for your network looks something like the following:
+```yaml
+signMode: threshold
+thresholdMode:
+  threshold: 2
+  cosigners:
+  - shardID: 1
+    p2pAddr: tcp://ip_1:2161
+  - shardID: 2
+    p2pAddr: tcp://ip_2:2161
+  - shardID: 3
+    p2pAddr: tcp://ip_3:2161
+  grpcTimeout: 1000ms
+  raftTimeout: 1000ms
+chainNodes:
+- privValAddr: tcp://node_ip:16159
+- privValAddr: tcp://node_ip2:16159
+debugAddr: ""
+```
