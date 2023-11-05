@@ -65,10 +65,10 @@ If all goes well you should have your horcrux cluster all setup but not running 
 update `$NODE_HOME/config/config.toml` and ensure that the following line is present:
 
 ```yml:
-priv_validator_laddr = "tcp://{{ node ip }}:{{ signer_port }}59"
+priv_validator_laddr = "tcp://0.0.0.0:{{ signer_port }}59"
 
 # as an example
-priv_validator_laddr = "tcp://121.1.34.57:23859"
+priv_validator_laddr = "tcp://0.0.0.0:23859"
 
 ```
 
