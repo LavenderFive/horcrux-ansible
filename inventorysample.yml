@@ -17,6 +17,7 @@ all:
 
     var_file: "group_vars/mainnets/{{ target }}.yml"
     ansible_ssh_private_key_file: "~/.ssh/id_ed25519"
+    port_prefix_url: https://raw.githubusercontent.com/polkachu/cosmos-port-prefixes/main/networks.json
     ansible_user: ubuntu
     ansible_port: 22
     horcrux_user: hcx
