@@ -64,11 +64,15 @@ If all goes well you should have your horcrux cluster all setup but not running 
 ### Prep your full nodes
 update `$NODE_HOME/config/config.toml` and ensure that the following line is present:
 
-```
-priv_validator_laddr = "tcp://0.0.0.0:1234"
+```yml:
+priv_validator_laddr = "tcp://{{ node ip }}:{{ signer_port }}59"
+
+# as an example
+priv_validator_laddr = "tcp://121.1.34.57:23859"
+
 ```
 
-Next ensure that ONLY your signer nodes have access to TCP port 1234. Strongly recommend that you use either a private network or at least a wireguard connection. Verify that the firewall rules are working now.
+Next ensure that ONLY your signer nodes have access to TCP port {{ signer_port }}59. Strongly recommend that you use either a private network or at least a wireguard connection. Verify that the firewall rules are working now.
 
 ### Restart your full nodes
 Restart your full sentry nodes. If all goes well you should be up and running!
