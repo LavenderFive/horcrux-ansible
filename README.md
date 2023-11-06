@@ -88,8 +88,34 @@ This ansible script creates a horcrux user (with limited capabilities).  It also
 
 If something is wrong, confirm the following:
 
+## horcrux dir
+The following is an example for `cheqd`. Note that you shouldn't (yet) see `horcrux.pid` or the `raft` dir populated on the initial configuration.
+
+```sh
+$ tree .horcrux/cheqd/
+.horcrux/cheqd/
+├── cheqd-mainnet-1_shard.json
+├── config.yaml
+├── ecies_keys.json
+├── horcrux.pid
+├── raft
+│   ├── logs.dat
+│   ├── snapshots
+│   │   ├── 2260-5142566-1699189819142
+│   │   │   ├── meta.json
+│   │   │   └── state.bin
+│   │   └── 2260-5150774-1699201686437
+│   │       ├── meta.json
+│   │       └── state.bin
+│   └── stable.dat
+└── state
+    ├── cheqd-mainnet-1_priv_validator_state.json
+    └── cheqd-mainnet-1_share_sign_state.json
+```
+
 ## horcrux config.yaml
-Confirm that the config.toml for your network looks something like the following:
+Confirm that the config.toml for your network looks something like the following. This assumes 3 horcrux signers, and 2 sentry nodes.
+
 ```yaml
 signMode: threshold
 thresholdMode:
