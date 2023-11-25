@@ -10,6 +10,10 @@ Security and management of any key material is challenging and is outside the sc
 # No Liability
 As far as the law allows, this software comes as is, without any warranty or condition, and no contributor will be liable to anyone for any damages related to this software or this license, under any kind of legal claim.
 
+**WARNING** 
+
+The local `priv_validator_key.json` that you copy into this dir is deleted at the end of execution, so that it isn't accidentally duplicated. You should *always* have a backup of your `priv_validator_key.json`.
+
 # Read up on the horcrux documentation
 Read up on the horcrux documentation [Horcrux document](https://github.com/strangelove-ventures/horcrux/blob/main/docs/migrating.md). Make sure you read and understand the horcrux documentation (including the sample architecture). 
 
