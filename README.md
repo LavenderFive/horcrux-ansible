@@ -1,7 +1,9 @@
 # Horcrux install from ansible
 
 
-This ansible script will deploy a horcrux cluster, by first installing the latest version of horcrux. Next, it will initialize the configuration based on the cluster configuration described in `inventory.yml`. 
+This ansible script will deploy a horcrux cluster, by first installing the latest version of horcrux. Next, it will 
+initialize the configuration based on the cluster configuration described in `inventory.yml`. If you use Kubernetes, 
+use: https://github.com/PFC-Validator/PFC-Cluster/tree/main/manifests/cosmos/pisco
 
 # Disclaimer
 
