@@ -1,10 +1,7 @@
 ---
-# go
-go_version: '1.18.5'
-
 # horcrux
 horcrux_repo: 'https://github.com/strangelove-ventures/horcrux'
-horcrux_version: 'v3.1.0'
+horcrux_version: 'v3.2.3'
 
 rpc_timeout: "1000ms"
 threshold: 2
