@@ -1,0 +1,34 @@
+---
+- name: Define hosts
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - '{{ var_file }}'
+  roles:
+    - define_hosts
+
+- name: delete rafts
+  hosts: signers
+  become: true
+  gather_facts: false
+  vars_files:
+    - '{{ var_file }}'
+  tasks:
+    - name: stop horcrux service
+      systemd:
+        daemon_reload: yes
+        name: "{{ service_file }}"
+        state: stopped
+        enabled: yes
+
+    - name: delete raft directory
+      file:
+        path: "{{ horcrux_dir }}/raft/"
+        state: absent
+
+    - name: restart horcrux service
+      systemd:
+        daemon_reload: yes
+        name: "{{ service_file }}"
+        state: restarted
+        enabled: yes

@@ -1,0 +1,13 @@
+---
+- name: use single signer
+  when: shares == 1
+  add_host: 
+    hostname: signer1
+    group: signers
+
+- name: use all signers
+  when: shares > 1
+  add_host: 
+    hostname: '{{ item }}'
+    group: signers
+  loop: '{{ groups["all"] }}'
