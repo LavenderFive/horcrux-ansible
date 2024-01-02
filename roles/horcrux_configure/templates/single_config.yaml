@@ -3,3 +3,4 @@ chainNodes:
 {% for sentry in sentries %}
 - privValAddr: tcp://{{ sentry }}
 {% endfor %}
+debugAddr: "0.0.0.0:6{{ signer_port }}"
