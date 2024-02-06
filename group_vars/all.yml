@@ -1,9 +1,9 @@
 ---
 # horcrux
 horcrux_repo: 'https://github.com/strangelove-ventures/horcrux'
-horcrux_version: 'v3.2.3'
+horcrux_version: 'v3.3.0-rc1'
 
-rpc_timeout: "1000ms"
+rpc_timeout: "500ms"
 threshold: 2
 shares: 3
 path: "/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin:{{ horcrux_home }}/go/bin"
