@@ -35,8 +35,6 @@
     - '{{ var_file }}'
   roles:
     - define_variables
-    - horcrux_install
     - backup
     - horcrux_configure
-    - horcrux_create_shares
     - horcrux_restart
