@@ -27,15 +27,15 @@
         - priv_validator_state.json
         - share_sign_state.json
 
-- name: Copy horcrux service file
-  become: true
-  template:
-    src: 'horcrux.service.j2'
-    dest: '/etc/systemd/system/{{ service_file }}'
-    owner: root
-    group: root
-    mode: 600
-  register: systemdunit
+    - name: Copy horcrux service file
+      become: true
+      template:
+        src: 'horcrux.service.j2'
+        dest: '/etc/systemd/system/{{ service_file }}'
+        owner: root
+        group: root
+        mode: 600
+      register: systemdunit
 
 - name: configure horcrux
   block:
