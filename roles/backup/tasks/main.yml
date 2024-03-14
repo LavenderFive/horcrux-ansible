@@ -8,15 +8,15 @@
     owner: "{{ horcrux_user }}"
     group: "{{ horcrux_user }}"
 
-- name: Delete old Horcrux dir
-  become: true
-  file:
-    path: "{{ horcrux_dir }}/"
-    state: absent
+# - name: Delete old Horcrux dir
+#   become: true
+#   file:
+#     path: "{{ horcrux_dir }}/"
+#     state: absent
 
-- name: Backup Horcrux service file
-  become: true
-  copy:
-    src: "/etc/systemd/system/{{ service_file }}"
-    dest: "/etc/systemd/system/b.{{ service_file }}"
-    remote_src: true
+# - name: Backup Horcrux service file
+#   become: true
+#   copy:
+#     src: "/etc/systemd/system/{{ service_file }}"
+#     dest: "/etc/systemd/system/b.{{ service_file }}"
+#     remote_src: true
