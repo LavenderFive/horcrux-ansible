@@ -35,7 +35,8 @@
     - '{{ var_file }}'
   roles:
     - identify_port
-    - horcrux_install
-    - horcrux_configure
-    - horcrux_create_shares
-    - horcrux_restart
+    - define_variables
+    # - horcrux_install
+    # - horcrux_configure
+    # - horcrux_create_shares
+    # - horcrux_restart
