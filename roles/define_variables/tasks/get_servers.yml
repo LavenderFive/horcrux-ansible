@@ -1,0 +1,23 @@
+---
+- name: get servers from backend
+  run_once: true
+  delegate_to: localhost
+  block:
+    - name: curl backend for servers
+      ansible.builtin.uri:
+        url: https://api.lavenderfive.com/servers/
+        method: GET
+        return_content: true
+        headers:
+          Authorization: "Api-Key {{ backend_api_key }}"
+      register: servers_request
+
+    - name: save server json
+      when: servers_request.status == 200
+      set_fact:
+        all_servers: "{{ servers_request.json }}"
+
+- name: only use current network servers
+  when: all_servers is defined
+  set_fact:
+    servers: "{{ all_servers[network] }}"

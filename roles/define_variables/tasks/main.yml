@@ -1,0 +1,8 @@
+---
+- name: get servers
+  when: backend_api_key is defined
+  include_tasks: get_servers.yml
+
+- name: get custom port prefix
+  import_tasks: get_port_prefix.yml
+  when: custom_port_prefix is not defined
