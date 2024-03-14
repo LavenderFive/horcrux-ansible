@@ -22,4 +22,3 @@
         - name: define network servers
           set_fact:
             sentries: "{{ all_servers[network].values() | flatten | map('regex_replace', '$', ':' + signer_port + '59') | list }}"
-

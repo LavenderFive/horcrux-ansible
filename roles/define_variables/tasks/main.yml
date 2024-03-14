@@ -3,6 +3,5 @@
   import_tasks: get_port_prefix.yml
 
 - name: get servers
-  when: backend_api_key is defined
+  when: backend_api_key is defined and not whitelabel|bool 
   include_tasks: get_servers.yml
-
