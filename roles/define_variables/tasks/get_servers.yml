@@ -1,7 +1,6 @@
 ---
 - name: get servers from backend
   run_once: true
-  delegate_to: localhost
   block:
     - name: curl backend for servers
       ansible.builtin.uri:
@@ -17,7 +16,10 @@
       set_fact:
         all_servers: "{{ servers_request.json }}"
 
-- name: only use current network servers
-  when: all_servers is defined
-  set_fact:
-    servers: "{{ all_servers[network] }}"
+    - name: create sentry list
+      when: all_servers is defined
+      block:
+        - name: define network servers
+          set_fact:
+            sentries: "{{ all_servers[network].values() | flatten | map('regex_replace', '$', ':' + signer_port + '59') | list }}"
+
