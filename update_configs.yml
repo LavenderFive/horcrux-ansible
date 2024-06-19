@@ -16,10 +16,15 @@
         
         - name: add all signers
           when: shares > 1
-          add_host: 
-            hostname: '{{ item }}'
-            group: signers
-          loop: '{{ groups["all"] }}'
+          block:
+            - name: remove testnet_signer1 from the list
+              set_fact:
+                filtered_list: "{{ groups['all'] | difference(['testnet_signer1']) }}"
+            - name: create host group
+              add_host: 
+                hostname: '{{ item }}'
+                group: signers
+              loop: '{{ filtered_list }}'
 
     - name: handle testnet signers
       when: testnet is defined and testnet|bool
