@@ -3,5 +3,6 @@
   import_tasks: get_port_prefix.yml
 
 - name: get servers
+  ignore_errors: true
   when: backend_api_key is defined and not whitelabel|bool and testnet is not defined
   include_tasks: get_servers.yml
