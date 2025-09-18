@@ -4,5 +4,9 @@
 
 - name: get servers
   ignore_errors: true
-  when: backend_api_key is defined and not whitelabel|bool and testnet is not defined
+  when: 
+    - backend_api_key is defined 
+    - not whitelabel|bool
+    - testnet is not defined
+    - sentries is not defined
   include_tasks: get_servers.yml
